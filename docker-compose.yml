@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+ instagram-be:
+     image: golang:1.15
+     command: >
+       go run main.go serve
+       --url=https://www.instagram.com
+       --listen-addr=:9112
+     ports:
+       - "9112:9112"
+     volumes:
+       - .:/go/src/instagram
+     working_dir: /go/src/instagram/
+     restart: on-failure
+ 
+ instagram-fe:
+     image: node:14.15-buster
+     command: [sh, -c, 'npm install && npm run serve']
+     volumes:
+       - ./frontend:/go/src/instagram/frontend
+       - /instagram/frontend
+     ports:
+       - '8080:8080'
+     working_dir: /go/src/instagram/frontend/
+     restart: on-failure
+     
+ 
